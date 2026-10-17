@@ -8,7 +8,7 @@ class Request(BaseModel):
     @field_validator("delays", mode="after")
     @classmethod
     def validate_delays_are_positive(cls, delays: list[float]) -> list[float]:
-        if all(delay >= 0 for delay in delays):
+        if any(delay < 0 for delay in delays):
             raise ValueError("Delays must be not negative")
 
         return delays

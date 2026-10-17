@@ -2,17 +2,17 @@ import asyncio
 import time
 
 from fastapi import FastAPI
-from app.models.request import Request
-from app.models.response import Response, Result
+from models.request import Request
+from models.response import Response, Result
 
 app = FastAPI()
 
 
 async def square_routine(number: int, delay: float) -> tuple[int, float]:
-    start = time.perf_counter()
+    start = time.monotonic()
     await asyncio.sleep(delay)
     result = number * number
-    end = time.perf_counter()
+    end = time.monotonic()
     return result, end - start
 
 
@@ -22,9 +22,9 @@ async def calculate(request: Request):
     for number, delay in zip(request.numbers, request.delays):
         tasks.append(asyncio.create_task(square_routine(number, delay)))
 
-    start = time.perf_counter()
+    start = time.monotonic()
     results = await asyncio.gather(*tasks)
-    end = time.perf_counter()
+    end = time.monotonic()
 
     prepared_results = []
     sequential_execution_time = 0.0
